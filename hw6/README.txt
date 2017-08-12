@@ -1,0 +1,1 @@
+The code can be ran as is from terminal.

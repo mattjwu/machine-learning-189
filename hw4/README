@@ -1,0 +1,15 @@
+Name: Matthew Wu
+ID: 26604548
+
+Instructions:
+
+All programs can be run using Python3
+
+logistic_regression.py can be run as is and produces the output for question 1.4
+
+wine.py can be run by uncommenting the corresponding function at the bottom. 
+
+plot_batch generates the graph for 4.1
+#plot_stochastic(use_varying_epsilon=False) generates the graph for 4.2
+#plot_stochastic(use_varying_epsilon=True) generates the graph for 4.3
+#classify_batch() generates output for the Kaggle submission.

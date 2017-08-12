@@ -1,0 +1,431 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage[margin=1in]{geometry}
+\usepackage{soul,color}
+\usepackage{amsfonts, amsmath}
+\usepackage{bbm}
+\usepackage{enumitem}
+\usepackage[nobreak=true]{mdframed}
+\usepackage{amssymb}
+\usepackage{graphicx}
+
+\newcommand{\solution}{\textbf{Solution: }}
+% \newcommand{\Nbf}{\textbf{N}}
+% \newcommand{\Pbf}{\textbf{P}}
+\newcommand{\R}{\mathbb{R}}
+
+\title{CS189, HW2}
+\author{\vspace{-6ex} Completed by: Matthew Wu}
+% \date{January 2017}
+\date{\vspace{-6ex}}
+
+\begin{document}
+
+\maketitle
+
+\subsection*{1. Conditional Probability} In the following questions, \textbf{show your work}, not just the final answer.
+\begin{enumerate}[label=(\alph*)]
+    \item The probability that an archer hits her target when it is windy is 0.4; when it is not windy, her probability of hitting the target is 0.7. On any shot, the probability of a gust of wind is 0.3. Find the probability that 
+    \begin{enumerate}[label=(\roman*)]
+        \item on a given shot there is a gust of wind and she hits her target. 
+        \item she hits the target with her first shot.
+        \item she hits the target exactly once in two shots.
+        \item there was no gust of wind on an occasion when she missed. 
+    \end{enumerate}
+    \begin{mdframed}
+    \solution
+    For this problem, let $W=w$ mean that there is wind, and $T=t$ mean that the archer hits the target.
+    \begin{enumerate}[label=(\roman*)]
+    \item $P(w)*P(t|w)=0.3*0.4=0.12$
+    \item $P(T=t)=P(\neg w)*P(t|\neg w)+P(w)*P(t|w)=0.3*0.4+0.7*0.7=0.12+0.49=0.61$
+    \item $P(t)*P(\neg t) + P(\neg t)*P(t) = 2*P(t)*P(\neg t)=2*0.39*0.61=0.4758$
+    \item $P(\neg w|\neg t)=\frac{P(\neg w \cap \neg t)}{P(\neg t)}=\frac{0.7*0.3}{0.39}=0.5385$
+    \end{enumerate}
+    \end{mdframed}
+    
+    \item Let $A, B, C$ be events. Show that if $$P(A|B, C) > P(A|B)$$ then $$P(A|B, C^c) < P(A|B),$$ where $C^c$ denotes the complement of $C$. Assume that each event on which we are conditioning has positive probability. 
+    \begin{mdframed} \solution\\
+    $P(A|B)=\frac{P(A|B,C)P(B|C)P(C)+P(A|B,C^c)P(B|C^c)P(C^c)}{P(B|C)P(C)+P(B|C^c)P(C^c)}$\\
+    Let $p_1=P(B|C)P(C)$ and $p_2=P(B|C^c)P(C^c)$\\
+    $P(A|B)=\frac{P(A|B,C)p_1+P(A|B,C^c)p_2}{p_1+p_2}$\\
+    $p_1P(A|B)+p_2P(A|B)=p_1P(A|B,C)+p_2P(A|B,C^c)$\\
+    $p_2(P(A|B)-P(A|B,C^c))=p_1(P(A|B,C)-P(A|B))$\\
+    Since we are told $P(A|B,C)>P(A|B)$, we know the right side of the equation above is positive. This means that the left side of the equation must also be positive. This means that\\$P(A|B)-P(A|B,C^c) > 0 \Rightarrow P(A|B,C^c)<P(A|B) \quad \square$.
+    \end{mdframed}
+    
+\end{enumerate}
+
+\newpage
+
+\subsection*{2. Positive Definiteness} 
+\textbf{Definition.} Let $A \in \mathbb{R}^{n \times n}$ be a symmetric matrix. 
+\begin{itemize}
+    \item We say that $A$ is \textbf{positive definite} if $\forall x \in \mathbb{R}^n - \{0\}$, $x^{\top}Ax > 0$. We denote this with $A \succ 0$. 
+    \item Similarly, we say that $A$ is \textbf{positive semidefinite} if $\forall x \in \R^n$, $x^{\top}Ax \geq 0$. We denote this with $A \succeq 0$. 
+\end{itemize}
+\begin{enumerate}[label=(\alph*)]
+    \item For a symmetric matrix $A \in \R^{n\times n}$, prove that all of the following are equivalent. 
+    \begin{enumerate}[label=(\roman*)]
+        \item $A \succeq 0$. 
+        \item $B^{\top} AB \succeq 0$, for some invertible matrix $B \in \R^{n\times n}$. 
+        \item All the eigenvalues of $A$ are nonnegative. 
+        \item There exists a matrix $U \in \R^{n\times n}$ such that $A = U U^{\top}$. 
+    \end{enumerate}
+
+    (Suggested road map: (i) $\Leftrightarrow$ (ii), (i) $\Rightarrow$ (iii) $\Rightarrow$ (iv)$ \Rightarrow$ (i). For the implication (iii) $\Rightarrow$ (iv) use the \emph{Spectral Theorem for Symmetric Matrices}. 
+    
+    \begin{mdframed} \solution\\ Suppose (i) is true. Then, $B^{\top} AB \succeq 0$ for $B=I$, the identity matrix. $\therefore$ (i) $\Rightarrow$ (ii).\\
+    Suppose (ii) is true. Then there is some invertible matrix $B$ such that $\forall x \in \R^n$, $x^{\top}B^{\top}ABx \succeq 0$. However, $x^{\top}B^{\top}=(Bx)^{\top}$. $\therefore$ $(Bx)^{\top}A(Bx) \succeq 0$. Let $Bx=y$, where $y$ is another matrix in $\R^n$. Since $B$ is invertible, there is a one to one correspondence between $x$ and $y$, which means\\ $\forall y \in \R^n$, $y^{\top}Ay \geq 0 \Rightarrow A \succeq 0$. $\therefore$ (i) $\Leftrightarrow$ (ii).\\\\
+    Suppose (i) is true. Assume that there is a negative eigenvalue $\lambda$ for $A$. Then there is some nonzero vector $x$ such that $Ax=\lambda x$. This gives us $x^{\top}(\lambda x) = \lambda x^{\top}x$. Since $x \neq \vec{0}$, $x^{\top}x > 0$. However $\lambda$ is negative, which means $\lambda x^{\top}x = x^{\top}Ax < 0$, which contradicts $A \succeq 0$. $\therefore$ (i) $\Rightarrow$ (iii).\\
+    Suppose (iii) is true. Since $A$ is symmetric, by the spectral theorem for symmetric matrices, there exists a diagonal matrix $D \in \R^{n \times n}$ and an orthogonal matrix $V \in \R^{n \times n}$ such that $A=VDV^{\top}$. Since all eigenvalues of A are nonnegative, all terms of $D$ are nonnegative. We can construct another matrix $E$ where $E_{ij}=\sqrt{D_{ij}}$. We have $EE=D$ and $E^{\top}=E$. This gives us\\ $A=VEE^{\top}V^{\top}$. Let $U=VE$. Then we have $A=UU^{\top}$. $\therefore$ (iii) $\Rightarrow$ (iv).\\
+    Suppose (iv) is true. $\forall x \in \R^n$, $x^{\top}Ax=x^{\top}UU^{\top}x=(U^{\top}x)^{\top}(U^{\top}x)\geq 0 \Rightarrow A \succeq 0$. $\therefore$ (iv) $\Rightarrow$ (i).\\
+    $\therefore$ (i) $\Leftrightarrow$ (ii) $\Leftrightarrow$ (iii) $\Leftrightarrow$ (iv). $\square$
+    \end{mdframed}
+    \newpage
+    \item For a symmetric positive definite matrix $A \succ 0 \in \R^{n\times n}$, prove the following.
+    \begin{enumerate}[label=(\roman*)]
+        \item For every $\lambda > 0$, we have that $A + \lambda I \succ 0$. 
+        \item There exists a $\gamma > 0$ such that $A - \gamma I \succ 0$. 
+        \item All the diagonal entries of $A$ are positive; i.e. $A_{ii} > 0$ for $i = 1, \ldots, n$. 
+        \item $\sum_{i=1}^n \sum_{j=1}^n A_{ij} > 0$, where $A_{ij}$ is the element at the $i$-th row and $j$-th column of $A$. 
+    \end{enumerate}
+    \begin{mdframed} \solution
+    \begin{enumerate}[label=(\roman*)]
+    \item $\forall x \in \R^n - \{0\}$, $x^{\top}(A+\lambda I)x=x^{\top}Ax+x^{\top}\lambda I x=x^{\top}Ax+\lambda x^{\top}x$.\\
+    We know $x^{\top}Ax > 0$, we know $\lambda > 0$, and we know $x^{\top}x > 0$.\\
+    $\therefore$ $x^{\top}Ax+\lambda x^{\top}x > 0 \Rightarrow A+\lambda I \succ 0$.
+    \item Suppose that $\lambda$ is an eigenvalue of $A$. Then there is some nonzero vector $x$ such that $Ax=\lambda x$. For $x$, this gives us $x^{\top}Ax=x^{\top}\lambda x = \lambda x^{\top}x$. Since $x^{\top}x>0$, it must be the case that $\lambda > 0$. This means that all eigenvalues of $A$ are greater than $0$.\\
+    Suppose we have an eigenvector $x$ of $A$ with eigenvalue $\lambda$. Consider what happens to this eigenvector in $A-\gamma I$.\\
+    $(A-\gamma I)x = Ax - \gamma I x = \lambda x - \gamma x = (\lambda - \gamma)x$\\
+    $x$ is still an eigenvector of $A - \gamma I$, but the new eigenvalue for this eigenvector is $\lambda - \gamma$.\\
+    Let $\lambda_{min}$ be the smallest eigenvalue of $A$. Let $\gamma = \lambda_{min}/2$. Then, all the eigenvalues of $A - \gamma I$ are still positive. This implies $A - \gamma I \succ 0$.
+    \item Assume that for at least one $i$ where $1 \leq i \leq n$, we have $A_{ii} \leq 0$. Consider the vector $x$ where $x_i=1$ and $\forall j \in \{1 \dots n\} - \{i\}$, $x_j=0$. Let $Ax=y$. We have $y_i=A_{ii} \leq 0$. This gives us $x^{\top}Ax=x^{\top}y=A_{ii} \leq 0$. This means, $A \nsucc 0$. However, this is a contradiction.\\$\therefore \forall i \in \{1, \dots, n\}$, $A_{ii} > 0$.
+    \item Consider the vector $x$ where $\forall i \in \{1, \dots, n\}$, $x_i=1$. Let $Ax=y$.\\
+    $\forall i \in \{1, \dots, n\}$, $y_i=\sum_{j=1}^{n}A_{ij}$.\\
+    $\therefore$ $x^{\top}y=\sum_{i=1}^{n}\sum_{j=1}^{n}A_{ij}$. Since $\forall x \in \R^n - {0}$, $x^{\top}Ax > 0$, it must be the case that $\sum_{i=1}^{n}\sum_{j=1}^{n}>0$.
+    \end{enumerate}
+    \end{mdframed}    
+\end{enumerate}
+
+\newpage
+\subsection*{3. Derivatives and Norms}
+In the following questions, \textbf{show your work}, not just the final answer. 
+\begin{enumerate}[label=(\alph*)]
+    \item Let $x, a \in \R^n$. Compute $\nabla_x(a^{\top}x)$.
+    \begin{mdframed} \solution
+    $\nabla_x(a^{\top}x)=\begin{bmatrix}a_1x_1 & a_2x_2 & a_3x_3 & \dots \end{bmatrix}^{\top}=a$
+    \end{mdframed}
+    
+    \item Let $A \in \R^{n\times n}$, $x \in \R^n$. Compute $\nabla_x(x^{\top} Ax)$. \\ How does the expression you derived simplify in the case that $A$ is symmetric? \\
+    
+    (Hint: to get a feeling for the problem, explicitly write down a $2 \times 2$ or $3 \times 3$ matrix $A$ with components $A_{11}$, $A_{12}$, etc., explicitly expand $x^{\top}Ax$ as a polynomial without matrix notation, calculate the gradient in the usual way, and put the result back into matrix form. Then generalize the result to the $n \times n$ case.)
+    \begin{mdframed} \solution
+    \[
+    \begin{bmatrix}
+    x_{1}\\
+    x_{2}
+    \end{bmatrix}^{\top}
+    \begin{bmatrix}
+    A_{11} & A_{12}\\
+    A_{21} & A_{22}
+    \end{bmatrix}
+    \begin{bmatrix}
+    x_{1} \\
+    x_{2}
+    \end{bmatrix}
+    =(A_{11}x_1+A_{21}x_2)x_1 + (A_{12}x_1+A_{22}x_2)x_2=f
+    \]
+    \[
+    \nabla_xf=
+    \begin{bmatrix}
+    2A_{11}x_1+A_{21}x_2+A_{12}x_2 \\
+    A_{21}x_1+A_{12}x_1+2A_{22}x_2
+    \end{bmatrix}
+    =(A+A^{\top})x
+    \]
+    $\nabla_x(x^{\top}Ax)=(A+A^{\top})x$, which can be simplified to $2Ax$ if $A$ is symmetric.
+    \end{mdframed}
+    
+    \item Let $A, X \in \R^{n \times n}$. Compute $\nabla_X (\text{trace}(A^{\top}X))$. 
+    \begin{mdframed} \solution\\
+    trace(
+    $\begin{bmatrix}
+    A_{11} & A_{12} & A_{13} & \cdots\\
+    A_{21} & A_{22} & A_{23} & \cdots\\
+    A_{31} & A_{32} & A_{33} & \cdots\\
+    \vdots & \vdots & \vdots & \ddots
+    \end{bmatrix}^{\top}
+    \begin{bmatrix}
+    X_{11} & X_{12} & X_{13} & \cdots\\
+    X_{21} & X_{22} & X_{23} & \cdots\\
+    X_{31} & X_{32} & X_{33} & \cdots\\
+    \vdots & \vdots & \vdots & \ddots
+    \end{bmatrix})=\sum_{i=1}^{n}\sum_{j=1}^{n}A_{ij}X_{ij}$\\
+    $\nabla_X$(trace$(A^{\top}X))=
+    \begin{bmatrix}
+    A_{11} & A_{12} & A_{13} & \cdots\\
+    A_{21} & A_{22} & A_{23} & \cdots\\
+    A_{31} & A_{32} & A_{33} & \cdots\\
+    \vdots & \vdots & \vdots & \ddots
+    \end{bmatrix}=A$
+    \end{mdframed}
+    
+    \item For a function $f: \R^d \rightarrow \R$ to be a norm, the distance metric $\delta(x, y) = f(x-y)$  must satisfy the triangle inequality. Is the function $f(x) = (\sqrt{|x_1|} + \sqrt{|x_2|})^2$ a norm for vectors $x \in \R^2$? Prove it or give a counterexample. 
+    \begin{mdframed} \solution
+    Consider $x_1=[1 \quad 0]$, $x_2=[-1 \quad 0]$\\
+    $f(x_1)=f(x_2)=\sqrt{1}^2=1$\\
+    $f(x_1-x_2)=(\sqrt{1}+\sqrt{1})^2=4$\\
+    $4>1+1$\\
+    Therefore this function isn't a norm.
+    \end{mdframed}
+    
+    \newpage
+    
+    \item Let $x \in \R^n$. Prove that $\lVert x \rVert_{\infty} \leq \lVert x\rVert_2 \leq \sqrt{n} \lVert x \rVert_{\infty}$. 
+    \begin{mdframed} \solution \\
+    Suppose that $x_i$ is the largest component of $x$. Then $\lVert x \rVert_{\infty} = x_i$. We also have\\
+    $\lVert x \rVert_2 = \sqrt{x_1^2 + \dots + x_i^2 + \dots + x_n^2} \geq \sqrt{x_i^2} = x_i$.\\
+    $\therefore \lVert x \rVert_{\infty} \leq \lVert x\rVert_2$.\\
+    
+    Suppose that $x_i$ is the largest component of $x$. Then the largest possible value of $\lVert x \rVert_2$ is if every single component is equal to $x_i$.\\
+    $\lVert x \rVert_2 \leq \sqrt{n*x_i^2}=\sqrt{n}x_i$.\\
+    We also have $\lVert x \rVert_{\infty}=x_i \Rightarrow \sqrt{n}\lVert x \rVert_{\infty}=\sqrt{n}x_i$.\\
+    $\therefore \lVert x \rVert_2 \leq \sqrt{n}\lVert x \rVert_{\infty}$.\\
+    $\therefore   \lVert x \rVert_{\infty} \leq \lVert x\rVert_2 \leq \sqrt{n} \lVert x \rVert_{\infty}$
+    \end{mdframed}
+    
+    \item Let $x \in \R^n$. Prove that $\lVert x \rVert_2 \leq \lVert x \rVert_1 \leq \sqrt{n} \lVert x \rVert_2$. \\
+    (Hint: The Cauchy–Schwarz inequality may come in handy.)
+    \begin{mdframed} \solution \\
+    $\lVert x \rVert_2^2=\langle x, x \rangle=x_1^2+x_2^2+\dots+x_n^2=\sum_{i=1}^{n}x_i^2$\\
+    $\lVert x \rVert_1^2=(x_1+\dots+x_n)(x_1+\dots+x_n)=
+    (\sum_{i=1}^{n}x_i^2)+\sum_{i=1}^{n-1}\sum_{j=i+1}^{n}|x_i||x_j|$\\
+    $\therefore \lVert x \rVert_2^2 \leq \lVert x \rVert_1^2 \Rightarrow \lVert x \rVert_2 \leq \lVert x \rVert_1$\\
+    
+    Let $\vec{1}$ denote a vector in $\R^n$ where $x_1=x_2=\dots=x_n=1$.\\
+    $\lVert x \rVert_1=\sum_{i=1}^{n}x_i=\langle \vec{1}, x\rangle$\\
+    By Cauchy-Schwarz, $\langle \vec{1}, x\rangle \leq \lVert \vec{1} \rVert_2 \lVert x \rVert_2 = \sqrt{n} \lVert x \rVert_2 \Rightarrow \lVert x \rVert_1 \leq \sqrt{n} \lVert x \rVert_2$\\
+    
+    $\therefore \lVert x \rVert_2 \leq \lVert x \rVert_1 \leq \sqrt{n} \lVert x \rVert_2$.
+    
+    \end{mdframed}
+    
+\end{enumerate}
+
+\newpage
+\subsection*{4. Eigenvalues}
+Let $A \in \R^{n\times n}$ be a symmetric matrix with $A \succeq 0$. 
+\begin{enumerate}[label=(\alph*)]
+    \item Prove that the largest eigenvalue of $A$ is $$\lambda_{\max}(A) = \max_{\lVert x \rVert_2 = 1} x^{\top} Ax.$$ \\
+    (Hint: Use the \emph{Spectral Theorem for Symmetric Matrices} to reduce the problem to the diagonal case.)
+    \begin{mdframed} \solution
+    By the Spectral Theorem for Symmetric Matrices, there is a diagonal matrix $D\in \R^{n\times n}$ and an orthogonal matrix $U\in \R^{n\times n}$ such that $A=UDU^{\top}$, where the diagonal entries of $D$ are the eigenvalues of $A$ and the columns of $U$ are the corresponding eigenvectors. Let $U^{\top}x=y$. Since $U^{\top}$ is orthogonal, there is a one to one correspondence for vectors $x$ and $y$, and $\lVert x\rVert_2=1 \Rightarrow \lVert y\rVert_2=1$. Thus, we can reduce $x^{\top}Ax$ to $x^{\top}UDU^{\top}x$ to $y^{\top}Dy$.\\
+    
+    Let $\lambda_1=D_{1,1}, \dots, \lambda_n=D_{n,n}$. Let $y_1, \dots, y_n$ be the entries of $y$. We are trying to maximize $y^{\top}Dy$ subject to the constraint $\lVert y \rVert_2 = 1.$\\
+    $y^{\top}Dy=y_1^2\lambda_1 + y_2^2\lambda_2 + \dots + y_n^2\lambda_n$, and $y_1^2 + y_2^2 + \dots + y_n^2 = 1$. Suppose $k=argmax_x(\lambda_x)$. Clearly we can maximize $y_1^2\lambda_1 + y_2^2\lambda_2 + \dots + y_n^2\lambda_n$ by letting $y_k^2=1$ and $y_i^2=0$ for $i\neq k$. This means $y^{\top}Dy=\lambda_k$. However, $\lambda_k$ is also the largest eigenvalue of $D$.
+    \end{mdframed}
+    
+    \item Similarly, prove that the smallest eigenvalue of $A$ is $$\lambda_{\min}(A) = \min_{\lVert x\rVert_2 = 1} x^{\top} Ax.$$
+    \begin{mdframed}
+    \solution Similar to part (a), we can reduce $x^{\top}Ax$ to the case with a diagonal matrix $D$ with the expression $y^{\top}Dy$ with $\lVert y \rVert_2 = 1$.\\
+    
+    Let $\lambda_1=D_{1,1}, \dots, \lambda_n=D_{n,n}$. Let $y_1, \dots, y_n$ be the entries of $y$. We are trying to minimize $y^{\top}Dy$ subject to the constraint $\lVert y \rVert_2 = 1.$\\
+    $y^{\top}Dy=y_1^2\lambda_1 + y_2^2\lambda_2 + \dots + y_n^2\lambda_n$, and $y_1^2 + y_2^2 + \dots + y_n^2 = 1$. Suppose $k=argmin_x(\lambda_x)$. Clearly we can minimize $y_1^2\lambda_1 + y_2^2\lambda_2 + \dots + y_n^2\lambda_n$ by letting $y_k^2=1$ and $y_i^2=0$ for $i\neq k$. This means $y^{\top}Dy=\lambda_k$. However, $\lambda_k$ is also the smallest eigenvalue of $D$.
+    \end{mdframed}
+    
+    \item Is either of the optimization problems described in parts (a) and (b) a convex program? Justify your answer. 
+    \begin{mdframed}
+    \solution No. For a function to be a convex set, $S\subset \R^n$ if and only if\\ $\forall x, y \in S, \forall t \in [0, 1], tx+(1-t)y \in S$. Consider the vectors $x=[1, 0, \dots, 0]$ and $y=[-1, 0, \dots, 0]$, and $t=\frac{1}{2}$.\\
+    $tx+(1-t)y=\frac{1}{2}[1,0,\dots,0]+\frac{1}{2}[-1,0,\dots,0]=[0,0,\dots,0]$, which clearly doesn't have a 2-norm of 1. Therefore, the optimization problems described above are not convex.
+    \end{mdframed}
+    
+\newpage    
+    
+    \item Show that if $\lambda$ is an eigenvalue of $A$ then $\lambda^2$ is an eigenvalue of $A^2$, and deduce that $$\lambda_{\max}(A^2) = \lambda_{\max}(A)^2 \text{ and } \lambda_{\min}(A^2) = \lambda_{\min}(A)^2.$$
+    \begin{mdframed}
+    \solution Suppose that $\lambda$ is an eigenvalue of $A$ and $x$ is the corresponding eigenvector. Then $Ax=\lambda x$. Suppose we want to solve for $A^2x$.\\
+    $A^2x=AAx=A(Ax)=A(\lambda x)=\lambda (Ax) = \lambda (\lambda x) = \lambda^2x$\\
+    Therefore, $\lambda^2$ is an eigenvalue of $A^2$. It follows that for every eigenvalue $\lambda$ of $A$, $\lambda^2$ is an eigenvalue of $A^2$. Also, since $A \succeq 0$, all the eigenvalues of $A$ are nonnegative, which means $\lambda_1<\lambda_2 \Rightarrow \lambda_1^2 < \lambda_2^2$. It clearly follows that if $\lambda_{\max}(A)=k$, then $\lambda_{\max}(A^2)=k^2=\lambda_{\max}(A)^2$, and vice versa for the minimum eigenvalue.
+    \end{mdframed}
+    
+    \item From parts (a), (b), and (d), show that for any vector $x \in \R^n$ such that $\lVert x \rVert_2 = 1$, $$\lambda_{\min}(A) \leq \lVert Ax \rVert_2 \leq \lambda_{\max}(A).$$
+    \begin{mdframed}
+    \solution\\
+    $\lVert Ax \rVert_2^2 = \langle Ax, Ax \rangle=x^{\top}A^{\top}Ax=x^{\top}A^2x$ since $A$ is symmetric.\\
+    From parts (a) and (b), we can conclude $\lambda_{\min}(A^2) \leq x^{\top}A^2x \leq \lambda_{\max}(A^2)$.\\
+    From part (d), we can conclude $\lambda_{\min}(A)^2 \leq \lVert Ax \rVert_2^2 \leq \lambda_{\max}(A)^2$.\\
+    Taking the square root of the terms tells us $\lambda_{\min}(A) \leq \lVert Ax \rVert_2 \leq \lambda_{\max}(A)$.
+    \end{mdframed}
+    
+    \item From part (e), deduce that for any vector $x \in \R^n$, $$\lambda_{\min}(A) \lVert x \rVert_2 \leq \lVert Ax \rVert_2 \leq \lambda_{\max}(A)\lVert x \rVert_2.$$
+    \begin{mdframed}
+    \solution\\
+    Suppose that $\lVert x \rVert_2 = c$. Let $y=\frac{1}{c}x$. Then $\lVert y \rVert_2 = 1$ and we have\\
+    $\lVert Ax \rVert_2=\lVert cAy \rVert_2=c\lVert Ay \rVert_2$.\\
+    From part (e), we know $\lambda_{\min}(A) \leq \lVert Ay \rVert_2 \leq \lambda_{\max}(A)$. This implies that\\
+    $c\lambda_{\min}(A) \leq c\lVert Ay \rVert_2 \leq c\lambda_{\max}(A)$. Since $c=\lVert x \rVert_2$ and $\lVert Ax \rVert_2=c\lVert Ay \rVert_2$, this implies that\\
+    $\lambda_{\min}(A) \lVert x \rVert_2 \leq \lVert Ax \rVert_2 \leq \lambda_{\max}(A)\lVert x \rVert_2$.
+    \end{mdframed}
+\end{enumerate}
+
+\newpage
+\subsection*{5. Gradient Descent}
+Consider the optimization problem $\min_{x \in \R^n} \frac{1}{2} x^{\top} Ax - b^{\top}x$, where $A$ is a symmetric matrix with $0 < \lambda_{\min}(A)$ and $\lambda_{\max} (A) < 1$.
+\begin{enumerate}[label=(\alph*)]
+    \item Using the first order optimality conditions, derive a closed-form solution for the minimum possible value of $x$, which we denote $x^*$. 
+    \begin{mdframed}
+    \solution We set the gradient of the objective function equal to 0 and solve for $x$. $A$ is symmetric and invertible since all eigenvalues are nonzero.\\
+    $$\nabla_x(\frac{1}{2}x^{\top}Ax-b^{\top}x)=Ax-b$$
+    $$Ax^*-b=0$$
+    $$Ax^*=b$$
+    $$x^*=A^{-1}b$$
+    \end{mdframed}
+    
+    \item Solving a linear system directly using Gaussian elimination takes $O(n^3)$ time, which may be wasteful if the matrix $A$ is sparse. For this reason, we will use gradient descent to compute an approximation to the optimal point $x^*$. Write down the update rule for gradient descent with a step size of 1.
+    \begin{mdframed}
+    \solution
+    $$x^{(k)}=x^{(k-1)}-(Ax^{(k-1)}-b)=x^{(k-1)}-Ax^{(k-1)}+b$$
+    \end{mdframed}
+    
+    \item Show that the iterates $x^{(k)}$ satisfy the recursion $$x^{(k)} - x^* = (I-A)(x^{(k-1)} - x^*).$$
+    \begin{mdframed}
+    \solution
+    $$x^{(k)}=x^{(k-1)}-Ax^{(k-1)}+b$$
+    $$x^{(k)}-x^*=x^{(k-1)}-Ax^{(k-1)}+b-x^*$$
+    $$x^{(k)}-x^*=x^{(k-1)}-Ax^{(k-1)}-x^*+Ax^*$$
+    $$x^{(k)}-x^*=(I-A)x^{(k-1)}+(I-A)(-x^*)$$
+    $$x^{(k)}-x^*=(I-A)(x^{(k-1)}-x^*)$$
+    \end{mdframed}
+    
+    \newpage
+    \item Show that for some $0 < \rho < 1$, $$\lVert x^{(k)} - x^* \rVert_2 \leq \rho \lVert x^{(k-1)} - x^* \rVert_2.$$
+    \begin{mdframed}
+    \solution Using the Spectral Theorem for Symmetric Matrices, we have $A=UDU^{\top}$, where $U$ is orthogonal and $D$ is diagonal and has the eigenvalues of $A$. Also, since $U$ is orthogonal, $UU^{\top}=I$, and $UIU^{\top}=I$. Consider the matrix $(I-A)$.\\
+    $(I-A)=UIU^{\top}-UDU^{\top}=U(I-D)U^{\top}$. Since the eigenvalues of $A$ are all between 0 and 1, all the diagonal entries of $D$ are between 0 and 1 and it's clear that $U(I-D)U^{\top}$ has eigenvalues strictly between 0 and 1, which implies $0<\lambda_{\min}(A) \leq \lambda_{\max}(A) < 1$. From 4(f), we know\\
+    $\lambda_{\min}(I-A)\lVert x^{(k-1)}-x^*\rVert_2 \leq \lVert (I-A)(x^{(k-1)}-x^*) \rVert_2 \leq \lambda_{\max}(I-A)\lVert x^{(k-1)}-x^*\rVert_2$. Using what we know about the eigenvalues of $(I-A)$,
+    $0 < \lVert (I-A)(x^{(k-1)}-x^*) \rVert_2 < \lVert x^{(k-1)}-x^*\rVert_2$. From 5(c), it's clear that
+    $\lVert x^{(k)}-x^*\rVert_2=\lVert (I-A)(x^{(k-1)}-x^*\rVert_2$. From this, we can conclude $0 < \lVert x^{(k)}-x^* \rVert_2 < \lVert x^{(k-1)}-x^*\rVert_2 \Rightarrow \lVert x^{(k)}-x^* \rVert_2 \leq \rho\lVert x^{(k-1)}-x^*\rVert_2$ for some $0 < \rho < 1$.
+    \end{mdframed}
+    
+    \item Let $x^{(0)} \in \R^n$ be a starting value for our gradient descent iterations. If we want our solution $x^{(k)}$ to be $\epsilon > 0$ close to $x^*$, i.e. $\lVert x^{(k)} - x^* \rVert_2 \leq \epsilon$, then how many iterations of gradient descent should we perform? In other words, how large should $k$ be? Give your answer in terms of $\rho, \lVert x^{(0)} - x^*\rVert_2, $ and $\epsilon$. Note that $0 < \rho < 1$, so $\log \rho < 0$. 
+    \begin{mdframed}
+    \solution Every iteration of gradient descent, our distance from $x^*$ is multiplied by $\rho$. Thus, we want to solve for the value of $k$ that satisfies the following inequality:
+    $$\lVert x^{(0)}-x^*\rVert\rho^k \leq \epsilon$$
+    $$\rho^k\leq \frac{\epsilon}{\lVert x^{(0)}-x^*\rVert}$$
+    $$k\log(\rho) \leq log\bigg(\frac{\epsilon}{\lVert x^{(0)}-x^*\rVert}\bigg)$$
+    $$k\geq \log_{\rho}\bigg(\frac{\epsilon}{\lVert x^{(0)}-x^*\rVert}\bigg)$$
+    \end{mdframed}
+    
+    \item Observe that the running time of each iteration of gradient descent is dominated by a matrix-vector product. What is the overall running time of gradient descent to achieve a solution $x^{(k)}$ which is $\epsilon$-close to $x^*$? Give your answer in terms of $\rho, \lVert x^{(0)} - x^*\rVert_2, \epsilon,$ and $n$. 
+    \begin{mdframed}
+    \solution The runtime for the matrix-vector product is $O(n^2)$. As we calculated in the last part, we need to perform $\log_{\rho}(\frac{\epsilon}{\lVert x^{(0)}-x^*\rVert})$ iterations. Thus, the runtime is
+    $$O(n^2\log_{\rho}\bigg(\frac{\epsilon}{\lVert x^{(0)}-x^*\rVert}\bigg))$$
+    \end{mdframed}
+\end{enumerate}
+
+\newpage 
+\subsection*{6. Classification}
+Suppose we have a classification problem with classes labeled $1, \ldots, c$ and an additional "doubt" category labeled $c+1$. Let $f: \R^d \rightarrow \{1, \ldots, c+1\}$ be a decision rule. Define the loss function 
+$$ R(f(x) = i|x) = 
+\begin{cases}
+0 & \text{if }i = j \quad i, j \in \{1, \ldots, c\} \\
+\lambda_r & \text{if } i=c + 1 \\
+\lambda_s & \text{otherwise}
+\end{cases} $$
+where $\lambda_r \geq 0$ is the loss incurred for choosing doubt and $\lambda_s \geq 0$ is the loss incurred for making a misclassification. Hence the risk of classifying a new data point $x$ as class $i \in \{1, 2, \ldots, c+1\}$ is $$R(f(x) = i|x) = \sum_{j=1}^c L(f(x) = i, y = j) P(Y = j|x).$$
+\begin{enumerate}[label=(\alph*)]
+    \item Show that the following policy obtains the minimum risk. (1) Choose class $i$ if $P(Y = i|x) \geq P(Y = j|x)$ for all $j$ and $P(Y=i|x) \geq 1 - \lambda_r / \lambda_s$; (2) choose doubt otherwise. 
+    \begin{mdframed}
+    \solution Obviously we want to pick the class that $x$ is most likely to fall under. If we pick class $i$, and $P(Y=i|x) \geq P(Y=j)$ for all $j$, then we should pick class $i$, because $x$ is at least as likely to be categorized under class $i$ as it will under any other individual class. However, it is possible that it would be better to classify $x$ under the doubt category if the expected risk for classifying $x$ under $i$ is too high. $E[R(f(x)=i|x)]=(1-P(Y=i|x))\lambda_s$, and $E[R(f(x)=c+1|x)=\lambda_r$. Thus, we should pick class $i$ if $(1-P(Y=i|x))\lambda_s \leq \lambda_r$, and doubt otherwise.
+    $$(1-P(Y=i|x))\lambda_s \leq \lambda_r$$
+    $$\Rightarrow 1-P(Y=i|x) \leq \frac{\lambda_r}{\lambda_s}$$
+    $$\Rightarrow P(Y=i|x) \geq 1-\frac{\lambda_r}{\lambda_s}$$
+    Thus, the proposed policy obtains the minimum risk.
+    \end{mdframed}
+    
+    \item What happens if $\lambda_r = 0$? What happens if $\lambda_r > \lambda_s$?  Explain why this is consistent with what one would expect intuitively. 
+    \begin{mdframed}
+    \solution If $\lambda_r=0$, then we will only classify $x$ under class $i$ if there is a $100\%$ chance that it belongs under class $i$. This makes sense intuitively, because there is no risk for not classifying $x$, so if we ever have any doubt we might as well not classify that point. If $\lambda_r>\lambda_s$, then we will classify every single point. This makes sense because if there is a higher risk associated with saying that we have doubt about where the point goes than guessing wrong, then we might as well classify every point even if we have no clue where it belongs.
+    \end{mdframed}
+\end{enumerate}
+
+\newpage
+\subsection*{7. Gaussian Classification}
+Let $P(x | \omega_i) \sim N(\mu_i, \sigma^2)$ for a two-category, one-dimensional classification problem with classes $\omega_1$ and $\omega_2$, $P(\omega_1) = P(\omega_2) = 1/2$, and $\mu_2 > \mu_1$. 
+\begin{enumerate}[label=(\alph*)]
+    \item Find the Bayes optimal decision boundary and the corresponding Bayes decision rule. 
+    \begin{mdframed}
+    \solution For a normal distribution,
+    $$P(x)=\frac{1}{\sigma\sqrt{2\pi}}e^{(x-\mu)^2/(2\sigma^2)}$$
+    To find the decision boundary, we want to find the point where $x$ is equally likely to be in class $\omega_1$ and $\omega_2$. In essence, we want
+    $$\frac{1}{\sigma\sqrt{2\pi}}e^{(x-\mu_1)^2/(2\sigma^2)}=\frac{1}{\sigma\sqrt{2\pi}}e^{(x-\mu_2)^2/(2\sigma^2)}$$
+    $$e^{(x-\mu_1)^2}=e^{(x-\mu_2)^2}$$
+    $$(x-\mu_1)^2=(x-\mu_2)^2$$
+    $$x-\mu_1=\mu_2-x$$
+    $$2x=\mu_1+\mu_2$$
+    $$x=\frac{\mu_1+\mu_2}{2}$$
+    \end{mdframed}
+    
+    \item The Bayes error is the probability of misclassification, $$ P_e = P((\text{misclassified as }\omega_1) | \omega_2)P(\omega_2) + P((\text{misclassified as }\omega_2)|\omega_1)P(\omega_1).$$
+    Show that the Bayes error associated with this decision rule is
+    $$ P_e = \frac{1}{\sqrt{2\pi}} \int_a^{\infty} e^{-z^2/2} dz$$ where $a = \frac{\mu_2 - \mu_1}{2\sigma}$. 
+    \begin{mdframed}
+    \solution $\sigma$ is the same for both distributions, and $P(\omega_1)=P(\omega_2)=\frac{1}{2}$, so by symmetry:
+    $$P((\text{misclassified as }\omega_1)|\omega_2)P(\omega_2)=P((\text{misclassified as }\omega_2)|\omega_1)P(\omega_1) \Rightarrow$$
+    $$P_e=2P((\text{misclassified as }\omega_2)|\omega_1)P(\omega_1)=P((\text{misclassified as }\omega_2|\omega_1)$$
+    $$=\int_\frac{\mu_1+\mu_2}{2}^{\infty}\frac{1}{\sigma\sqrt{2\pi}}e^{-(x-\mu_1)^2/(2\sigma^2)}dx$$
+    $$\text{Let }z=\frac{1}{\sigma}(x-\mu_1) \Rightarrow dz=\frac{1}{\sigma}dx$$
+    $$=\frac{1}{\sqrt{2\pi}}\int_{\frac{\mu_2-\mu_1}{2\sigma}}^{\infty}e^{-z^2/2}dz$$
+    \end{mdframed}
+\end{enumerate}
+
+\newpage
+\subsection*{8. Maximum Likelihood Estimation}
+Let $X$ be a discrete random variable which takes values in $\{1, 2, 3\}$ with probabilities $P(X = 1) = p_1, P(X=2) = p_2,$ and $P(X = 3) = p_3$, where $p_1 + p_2 + p_3 = 1$.  Show how to use the method of maximum likelihood to estimate $p_1, p_2,$ and $p_3$ from $n$ observations of $X: x_1, \ldots, x_n$. Express your answer in terms of the counts $$k_1 = \sum_{i=1}^n \mathbbm{1}(x_i = 1), k_2 = \sum_{i=1}^n \mathbbm{1}(x_i = 2), \text{ and }k_3 = \sum_{i=1}^n \mathbbm{1}(x_i = 3),$$ where 
+$$\mathbbm{1}(x = a) = 
+\begin{cases}
+1 & \text{if } x = a \\
+0 & \text{if } x \neq a. 
+\end{cases}$$
+\begin{mdframed}
+We want to maximize the function $L(p)=p_1^{k_1}p_2^{k_2}p_3^{k_3}=p_1^{k_1}p_2^{k_2}(1-p_1-p_2)^{k_3}$. This is equivalent to maximizing $\ln(L(p_1,p_2))=k_1\ln(p_1)+k_2\ln(p_2)+k_3\ln(1-p_1-p_2)$.
+\[\scalebox{1}{$
+H(\ln(L(p_1,p_2)))=
+\begin{bmatrix}
+-\frac{k_1}{p_1^2}-\frac{k_3}{(1-p_1-p_2)^2} &
+-\frac{k_3}{(1-p_1-p_2)^2}\\-\frac{k_3}{(1-p_1-p_2)^2} &
+-\frac{k_2}{p_2^2}-\frac{k_3}{(1-p_1-p_2)^2}
+\end{bmatrix}$
+}
+\]
+\[
+\begin{bmatrix}
+x_1&x_2
+\end{bmatrix}
+H
+\begin{bmatrix}
+x_1\\x_2
+\end{bmatrix}
+=
+-x_1(\frac{x_1k_1}{p_1^2}+\frac{(x_1+x_2)k_3}{(1-p_1-p_2)^2}-x_2(\frac{x_2k_2}{p_2^2}+\frac{(x_1+x_2)k_3}{(1-p_1-p_2)^2}
+\]
+\[
+=-\frac{x_1^2k_1}{p_1^2}-\frac{x_2^2k_2}{p_2^2}-\frac{(x_1+x_2)^2k_3}{(1-p_1-p_2)^2}
+\]
+From this it's easy to deuce that the hessian of $\ln(L(p_1,p_2))$ is negative definite, which means the function is concave. This means if we find the point where the gradient is $0$, it is guaranteed to be the maximum. We set the gradient equal to $0$.
+\[
+\begin{bmatrix}
+\frac{k_1}{p_1}-\frac{k_3}{1-p_1-p_2}\\
+\frac{k_2}{p_2}-\frac{k_3}{1-p_1-p_2}
+\end{bmatrix}
+=
+\begin{bmatrix}
+\frac{k_1}{p_1}-\frac{k_3}{p_3}\\
+\frac{k_2}{p_2}-\frac{k_3}{p_3}
+\end{bmatrix}
+=\begin{bmatrix}0\\0\end{bmatrix}
+\]
+$$\frac{k_1}{p_1}=\frac{k_2}{p_2}=\frac{k_3}{p_3}, \quad p_1+p_2+p_3=1$$
+From here, it's clear that $p_1=\frac{k_1}{k_1+k_2+k_3}$, $p_2=\frac{k_2}{k_1+k_2+k_3}$, $p_3=\frac{k_3}{k_1+k_2+k_3}$.
+\end{mdframed}
+\end{document}
